@@ -1,0 +1,6 @@
+{
+  "name": "Math Snake: Multi-Eater",
+  "description": "An interactive multiplication game for primary students featuring a classic snake mechanic and a Gemini-powered personal math tutor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

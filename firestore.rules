@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Catch-all deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Profiles Collection
+    match /profiles/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(uid) && 
+        request.resource.data.keys().hasAll(['uid', 'displayName', 'highestScore', 'totalGames', 'createdAt', 'updatedAt']) &&
+        request.resource.data.uid == request.auth.uid;
+      allow update: if isOwner(uid) &&
+        request.resource.data.uid == existingData().uid;
+        
+      function existingData() {
+        return resource.data;
+      }
+    }
+
+    // Sessions Collection
+    match /sessions/{sessionId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+    }
+  }
+}

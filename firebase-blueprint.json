@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "User Profile",
+      "description": "Stores student stats and profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "highestScore": { "type": "number" },
+        "totalGames": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "highestScore", "totalGames", "createdAt", "updatedAt"]
+    },
+    "GameSession": {
+      "title": "Game Session",
+      "description": "Historical record of a single game round",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "score": { "type": "number" },
+        "accuracy": { "type": "number" },
+        "avgTime": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "score", "accuracy", "avgTime", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/profiles/{uid}": {
+      "schema": "Profile",
+      "description": "Student profiles"
+    },
+    "/sessions/{sessionId}": {
+      "schema": "GameSession",
+      "description": "Historical game records"
+    }
+  }
+}
